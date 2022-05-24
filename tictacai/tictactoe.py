@@ -10,10 +10,11 @@ STONES = ('○', '⨉')
 btn_size = (10, 5)
 
 _default_desk = [
-            [-1, -1, -1],
-            [-1, -1, -1],
-            [-1, -1, -1],
-        ]
+    [-1, -1, -1],
+    [-1, -1, -1],
+    [-1, -1, -1],
+]
+
 
 class TicTacToe:
     def __init__(self, player1, player2):
@@ -35,10 +36,13 @@ class TicTacToe:
 
     def play(self, x, y):
         self.set_stone(x, y, self.get_player_on_roll().color)
-        print(f'end game: {self.check_win()}')
+
         game_state = self.check_win()
         if game_state != -1:
-            print('game ended')
+            print(f'end game: {STONES[self.check_win()]}')
+
+            for p in self.players:
+                p.game_over(game_state)
             self._stones = deepcopy(_default_desk)
             # todo
 
@@ -67,6 +71,18 @@ class TicTacToe:
             for j in range(1, 3):
                 if self._stones[j][i] != a:
                     break
+            else:
+                return a
+
+        for i in range(2):
+            a = self._stones[i * 2][0]
+            if a == -1:
+                continue
+            for j in range(1, 3):
+
+                if self._stones[abs(i * 2 - j)][j] != a:
+                    break
+
             else:
                 return a
 
