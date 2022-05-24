@@ -9,14 +9,15 @@ from tictacai.players import Player
 STONES = ('○', '⨉')
 btn_size = (10, 5)
 
-
-class TicTacToe:
-    def __init__(self, player1, player2):
-        self._stones = [
+_default_desk = [
             [-1, -1, -1],
             [-1, -1, -1],
             [-1, -1, -1],
         ]
+
+class TicTacToe:
+    def __init__(self, player1, player2):
+        self._stones = deepcopy(_default_desk)
 
         self.players = (player1, player2)
         for p in self.players:
@@ -38,6 +39,7 @@ class TicTacToe:
         game_state = self.check_win()
         if game_state != -1:
             print('game ended')
+            self._stones = deepcopy(_default_desk)
             # todo
 
         self._player_on_roll = 1 if self._player_on_roll == 0 else 0
