@@ -9,7 +9,8 @@ from tictacai.tictactoe import TicTacToeGUI
 
 if __name__ == '__main__':
     theme('black')
-    t = TicTacToeGUI()
+    t = TicTacToeGUI(HumanPlayer(0), HumanPlayer(1))
+
     t.start()
     while t.is_running():
         sleep(.1)
