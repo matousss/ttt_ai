@@ -30,14 +30,20 @@ _DEFAULT_DESK = [
 ]
 
 
+def _default_chooser(game: 'TicTacToe'):
+    return random.randint(0, 1)
+
+
 class TicTacToe:
-    def __init__(self, player1, player2):
+    def __init__(self, player1, player2, *, choose_next_player=_default_chooser):
         self._stones = deepcopy(_DEFAULT_DESK)
 
         self.players = (player1, player2)
         for p in self.players:
             p.set_desk(self)
-        self._player_on_roll = random.randint(0, 1)
+
+        self.choose_next_player = choose_next_player
+        self._player_on_roll = self.choose_next_player(self)
 
     def get_player_on_roll(self) -> Player:
         return self.players[self._player_on_roll]
@@ -59,10 +65,13 @@ class TicTacToe:
             for p in self.players:
                 p.game_over(game_state)
             self._stones = deepcopy(_DEFAULT_DESK)
+
+            self._player_on_roll = self.choose_next_player(self)
             # todo
 
-        self._player_on_roll = 1 if self._player_on_roll == 0 else 0
-        print(self._player_on_roll)
+        else:
+            self._player_on_roll = 1 if self._player_on_roll == 0 else 0
+
         self.next_roll()
 
     def get_desk(self):
@@ -118,8 +127,8 @@ class TicTacToeGUI(TicTacToe):
         ] for j in range(3)]
         return layout
 
-    def __init__(self, *args):
-        super().__init__(*args)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self._running = False
         self._window = Window('TicTacToe', self.init_layout())
 
