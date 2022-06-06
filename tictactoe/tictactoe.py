@@ -23,7 +23,7 @@ STONES_BASE64 = [convert_img_base64(s) for s in STONES_ASSETS]
 
 btn_size = (12, 6)
 
-_default_desk = [
+_DEFAULT_DESK = [
     [-1, -1, -1],
     [-1, -1, -1],
     [-1, -1, -1],
@@ -32,7 +32,7 @@ _default_desk = [
 
 class TicTacToe:
     def __init__(self, player1, player2):
-        self._stones = deepcopy(_default_desk)
+        self._stones = deepcopy(_DEFAULT_DESK)
 
         self.players = (player1, player2)
         for p in self.players:
@@ -58,7 +58,7 @@ class TicTacToe:
 
             for p in self.players:
                 p.game_over(game_state)
-            self._stones = deepcopy(_default_desk)
+            self._stones = deepcopy(_DEFAULT_DESK)
             # todo
 
         self._player_on_roll = 1 if self._player_on_roll == 0 else 0
@@ -112,8 +112,10 @@ class TicTacToe:
 class TicTacToeGUI(TicTacToe):
     @staticmethod
     def init_layout():
-        layout = [[Button(key=f'{i}-{j}', image_data='', border_width=0, disabled_button_color=('black', 'black')) for i in range(3)]
-                  for j in range(3)]
+        layout = [[
+            Button(key=f'{i}-{j}', image_data='', border_width=0, disabled_button_color=('black', 'black'))
+            for i in range(3)
+        ] for j in range(3)]
         return layout
 
     def __init__(self, *args):
