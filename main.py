@@ -4,7 +4,7 @@ from PySimpleGUI import theme
 
 # IMAGE_O = 'assets/o.png'
 # IMAGE_X = 'assets/x.png'
-from players import HumanPlayer
+from tictacai.players import HumanPlayer
 from tictacai.tictactoe import TicTacToeGUI
 
 if __name__ == '__main__':
