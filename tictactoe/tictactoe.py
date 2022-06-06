@@ -1,13 +1,27 @@
+import base64
 from copy import deepcopy
 import random
 from threading import Thread
 
 from PySimpleGUI import WIN_CLOSED, Window, Button
 
-from tictacai.players import Player
+from tictactoe.players import Player
 
 STONES = ('○', '⨉')
-btn_size = (10, 5)
+STONES_ASSETS = (
+    './assets/o.png',
+    './assets/x.png',
+)
+
+
+def convert_img_base64(src):
+    with open(src, "rb") as img_file:
+        return base64.b64encode(img_file.read())
+
+
+STONES_BASE64 = [convert_img_base64(s) for s in STONES_ASSETS]
+
+btn_size = (12, 6)
 
 _default_desk = [
     [-1, -1, -1],
@@ -39,7 +53,8 @@ class TicTacToe:
 
         game_state = self.check_win()
         if game_state != -1:
-            print(f'end game: {STONES[self.check_win()]}')
+            winner = self.check_win()
+            print(f'end game: {"tie" if winner == 3 else STONES[winner]}')
 
             for p in self.players:
                 p.game_over(game_state)
@@ -86,40 +101,58 @@ class TicTacToe:
             else:
                 return a
 
-        return -1
+        for col in self._stones:
+            for stone in col:
+                if stone == -1:
+                    return -1
+
+        return 3
 
 
 class TicTacToeGUI(TicTacToe):
     @staticmethod
     def init_layout():
-        layout = [[Button(size=btn_size, key=f'{i}-{j}', font=('Arial', 30)) for i in range(3)] for j in range(3)]
+        layout = [[Button(key=f'{i}-{j}', image_data='', border_width=0, disabled_button_color=('black', 'black')) for i in range(3)]
+                  for j in range(3)]
         return layout
 
     def __init__(self, *args):
         super().__init__(*args)
         self._running = False
         self._window = Window('TicTacToe', self.init_layout())
-        # self._tasks = []
 
     def is_running(self):
         return self._running
 
     @staticmethod
     def _get_symbol(_id: int):
+        val = {
+            'image_data': '',
+            'image_size': (btn_size[0] * 10, btn_size[1] * 20),
+        }
         if _id == -1:
-            return ''
-        return STONES[_id]
+            return val
+
+        val['image_data'] = STONES_BASE64[_id]
+
+        return val
 
     def _update_symbols(self):
         for row in range(3):
             for col in range(3):
                 stone = self._stones[col][row]
-                self._window[f'{row}-{col}'].update(text=self._get_symbol(stone), disabled=(stone != -1))
+                self._window[f'{row}-{col}'].update(disabled=(stone != -1), **self._get_symbol(stone))
 
     def on_event(self, *args, **kwargs):
         self.get_player_on_roll().on_event(*args, **kwargs)
 
+    def _fix_btns(self):
+        self._window.read(timeout=1)
+        self._update_symbols()
+
     def _work(self):
+        self._fix_btns()
+
         while self._running is True:
             event, values = self._window.read()
             if event == WIN_CLOSED:
