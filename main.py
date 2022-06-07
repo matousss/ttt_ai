@@ -4,11 +4,8 @@ from PySimpleGUI import theme
 
 from tictactoe.players import HumanPlayer
 from tictactoe.game import TicTacToeGUI
-from tictactoe.util import init_assets, STONES_BASE64
 
 if __name__ == '__main__':
-    print(STONES_BASE64)
-
     theme('black')
     t = TicTacToeGUI(HumanPlayer(0), HumanPlayer(1), choose_next_player=lambda game: 1)
     t.start()
