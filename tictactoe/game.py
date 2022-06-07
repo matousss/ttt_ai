@@ -42,7 +42,15 @@ class TicTacToe:
 
         self.next_roll()
 
+    """
+    Places a stone on the desk.
+    :param x: x coordinate of the stone
+    :param y: y coordinate of the stone
+    """
     def play(self, x, y):
+        if self._stones[x][y] != Stone.EMPTY:
+            raise ValueError('This cell is already occupied')
+
         self.set_stone(x, y, self.get_player_on_roll().color)
 
         game_state = check_win(self._stones)
@@ -53,6 +61,9 @@ class TicTacToe:
             self._player_on_roll = Stone.O_PLAYER if self._player_on_roll == Stone.X_PLAYER else Stone.X_PLAYER
             self.next_roll()
 
+    """
+    Returns copy of current desk state
+    """
     def get_desk(self):
         return deepcopy(self._stones)
 
@@ -83,13 +94,14 @@ class TicTacToeGUI(TicTacToe):
         self._running = False
         self._window = Window('TicTacToe', self.init_layout())
 
+    """
+    Check if game window is running
+    """
     def is_running(self):
         return self._running
 
     @staticmethod
     def _get_symbol(_id: int):
-        global STONE_BASE64
-
         val = {
             'image_data': '',
             'image_size': TicTacToeGUI.BTN_SIZE,

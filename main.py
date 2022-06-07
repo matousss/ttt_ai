@@ -11,5 +11,3 @@ if __name__ == '__main__':
     t.start()
     while t.is_running():
         sleep(.1)
-        # t.set_stone(random.randrange(0, 3), random.randrange(0, 3), random.randrange(1, 3))
-        # print(t.get_desk())
