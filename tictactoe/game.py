@@ -19,7 +19,6 @@ class TicTacToe:
 
         self.choose_next_player = choose_next_player
         self._player_on_roll = self.choose_next_player(self)
-        print('init')
 
     def get_player_on_roll(self) -> Player:
         return self.players[self._player_on_roll]

@@ -1,6 +1,7 @@
 import base64
 import random
 from copy import deepcopy
+from os import path
 
 
 class Stone:
@@ -17,14 +18,23 @@ class GameState:
 
 
 STONE_STR = {
-    Stone.EMPTY: '',
+    Stone.EMPTY: ' ',
     Stone.X_PLAYER: '⨉',
     Stone.O_PLAYER: '○',
 }
 
+ROOT_DIR = path.abspath(
+    # parent dir
+    path.join(
+        # current dir
+        path.dirname(path.abspath(__file__)),
+        path.pardir
+    )
+)
+
 STONES_ASSETS = {
-    Stone.X_PLAYER: './assets/x.png',
-    Stone.O_PLAYER: './assets/o.png',
+    Stone.X_PLAYER: path.join(ROOT_DIR, 'assets/x.png'),
+    Stone.O_PLAYER: path.join(ROOT_DIR, 'assets/o.png'),
 }
 
 DEFAULT_DESK = [
