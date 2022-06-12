@@ -12,7 +12,6 @@ def get_raw(*paths):
             data_x_raw.append(loaded[0][i])
             data_y_raw.append(loaded[1][i])
 
-
     return data_x_raw, data_y_raw
 
 

@@ -32,9 +32,7 @@ def train(model, data, epochs, batch_size):
     y = numpy.array(output_data)
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
-
     model.fit(x=x_train, y=y_train,
-              validation_data=(x_test, y_test),
               batch_size=batch_size, epochs=epochs,
               shuffle=True, verbose=0,
               validation_split=0.3)
@@ -44,4 +42,3 @@ def train(model, data, epochs, batch_size):
     print("MAE: {}, MSE: {}".format(mean_absolute_error(y_test, pred),
                                     mean_squared_error(y_test, pred, squared=False)))
     return model
-
