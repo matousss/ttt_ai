@@ -37,8 +37,11 @@ class TicTacToe:
         for p in self.players:
             p.game_over(game_state)
 
-    def _game_over(self, game_state):
+    def _print_winner(self, game_state):
         print(f'Game ended: {"draw" if game_state == GameState.DRAW else f"{STONE_STR[game_state]} wins"}')
+
+    def _game_over(self, game_state):
+        self._print_winner(game_state)
         self._game_num += 1
         if game_state == GameState.DRAW:
             self._draws += 1
