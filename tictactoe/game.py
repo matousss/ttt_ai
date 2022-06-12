@@ -15,7 +15,7 @@ class TicTacToe:
 
         # init players
         for p in self.players:
-            p.set_desk(self)
+            p.set_game(self)
 
         self.choose_next_player = choose_next_player
         self._player_on_roll = self.choose_next_player(self)

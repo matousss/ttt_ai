@@ -110,3 +110,14 @@ def check_win(desk):
                 return GameState.PLAYING
 
     return GameState.DRAW
+
+
+def get_possible_moves(board):
+    moves = []
+
+    for x in range(len(board)):
+        for y in range(len(board[0])):
+            if board[x][y] == Stone.EMPTY:
+                moves.append((x, y))
+
+    return moves

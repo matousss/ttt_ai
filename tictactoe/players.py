@@ -5,13 +5,14 @@ def raise_(ex):
 class Player:
     def __init__(self, color):
         self.color = color
-        self.desk = None
+        self.game = None
+        self.score = 0
 
-    def set_desk(self, desk):
-        self.desk = desk
+    def set_game(self, game):
+        self.game = game
 
     def play(self, x, y):
-        self.desk.play(x, y)
+        self.game.play(x, y)
 
     def on_roll(self, *args, **kwargs):
         pass
@@ -29,4 +30,5 @@ class HumanPlayer(Player):
 
     def on_event(self, event, *args, **kwargs):
         y, x = (int(a) for a in event.split('-'))
-        self.play(x, y)
+        if self.game.get_desk()[x][y] == Stone.EMPTY:
+            self.play(x, y)
