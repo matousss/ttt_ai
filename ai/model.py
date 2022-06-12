@@ -1,7 +1,8 @@
 import numpy
 from keras.layers import Dense
-from keras.losses import mean_absolute_error, mean_squared_error
+
 from keras.models import Sequential as KerasModel
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.model_selection import train_test_split
 
 
