@@ -1,5 +1,7 @@
 from copy import deepcopy
 
+import numpy
+
 from tictactoe.util import get_default_desk, STONE_STR, GameState
 
 
@@ -40,6 +42,9 @@ class DeskLog:
             self._locked()
         self._winner = winner
 
+    def get_winner(self):
+        return self._winner
+
     def __str__(self):
         s = self.get_strokes()
         string = ''
@@ -47,7 +52,7 @@ class DeskLog:
         for i in range(len(s)):
             desk = s[i][0]
             desk[s[i][1].x][s[i][1].y] = s[i][1].stone
-            string += f'{i+1}.\n┌──────┐\n'
+            string += f'{i + 1}.\n┌──────┐\n'
             for x in range(3):
                 for y in range(3):
                     string += f' {STONE_STR[desk[x][y]]}'
@@ -56,3 +61,63 @@ class DeskLog:
         if self._winner:
             string += f'Winner: {"Draw" if self._winner == GameState.DRAW else STONE_STR[self._winner]}'
         return string
+
+
+def get_right_strokes(log: DeskLog):
+    right_strokes = []
+
+    for data in log.get_strokes():
+        desk_state = data[0]
+        stroke = data[1]
+
+        if stroke.stone not in (log.get_winner(), GameState.DRAW):
+            continue
+
+        transformed_desk = get_default_desk()
+        for x in range(3):
+            for y in range(3):
+                transformed_desk[x][y] = int(desk_state[x][y] == log.get_winner())
+
+        input = numpy.array(desk_state).flatten()
+        result = get_default_desk()
+        result[stroke.x][stroke.y] = 1
+
+        output = numpy.array(result).flatten()
+
+        right_strokes.append((input, output))
+
+    return right_strokes
+
+
+def data_from_logs(logs):
+    input_data = []
+    output_data = []
+    for log in logs:
+        for data in get_right_strokes(log):
+            print(data)
+            input_data.append(data[0])
+            output_data.append(data[1])
+
+    return numpy.array(input_data), numpy.array(output_data)
+
+
+def save_data(input_data, output_data, filename):
+    with open(filename, 'w+') as f:
+        for i in range(len(input_data)):
+            in_str = ','.join(str(x) for x in input_data[i])
+            out_str = ','.join(str(x) for x in output_data[i])
+            f.write(f'{in_str},{out_str}\n')
+
+
+def load_data(filename):
+    with open(filename, 'r') as f:
+        lines = f.readlines()
+        input_data = []
+        output_data = []
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+            in_str, out_str = line.split(',')
+            input_data.append([int(x) for x in in_str.split(' ')])
+            output_data.append([int(x) for x in out_str.split(' ')])
