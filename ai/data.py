@@ -63,14 +63,14 @@ class DeskLog:
         return string
 
 
-def get_right_strokes(log: DeskLog):
+def get_right_strokes(log: DeskLog, include_draws):
     right_strokes = []
 
     for data in log.get_strokes():
         desk_state = data[0]
         stroke = data[1]
 
-        if stroke.stone not in (log.get_winner(), GameState.DRAW):
+        if stroke.stone != log.get_winner() or (log.get_winner() == GameState.DRAW and include_draws):
             continue
 
         transformed_desk = get_default_desk()
@@ -89,12 +89,11 @@ def get_right_strokes(log: DeskLog):
     return right_strokes
 
 
-def data_from_logs(logs):
+def data_from_logs(logs, include_draws=False):
     input_data = []
     output_data = []
     for log in logs:
-        for data in get_right_strokes(log):
-            print(data)
+        for data in get_right_strokes(log, include_draws):
             input_data.append(data[0])
             output_data.append(data[1])
 
@@ -106,7 +105,7 @@ def save_data(input_data, output_data, filename):
         for i in range(len(input_data)):
             in_str = ','.join(str(x) for x in input_data[i])
             out_str = ','.join(str(x) for x in output_data[i])
-            f.write(f'{in_str},{out_str}\n')
+            f.write(f'{in_str}:{out_str}\n')
 
 
 def load_data(filename):
@@ -118,6 +117,8 @@ def load_data(filename):
             line = line.strip()
             if not line:
                 continue
-            in_str, out_str = line.split(',')
-            input_data.append([int(x) for x in in_str.split(' ')])
-            output_data.append([int(x) for x in out_str.split(' ')])
+            in_str, out_str = line.split(':')
+            input_data.append([int(x) for x in in_str.split(',')])
+            output_data.append([int(x) for x in out_str.split(',')])
+
+    return input_data, output_data
