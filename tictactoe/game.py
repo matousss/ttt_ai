@@ -9,7 +9,7 @@ from tictactoe.util import STONE_STR, STONES_BASE64, Stone, GameState, get_defau
 
 # Class represents a game of TicTacToe
 class TicTacToe:
-    def __init__(self, player1, player2, *, choose_next_player=_default_chooser):
+    def __init__(self, player1, player2, *, choose_next_player=_default_chooser, max_games=None):
         self._stones = get_default_desk()
         self.players = (player1, player2)
         self._last_played = None
