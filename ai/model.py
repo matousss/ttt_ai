@@ -5,7 +5,7 @@ from keras.models import Sequential as KerasModel
 from sklearn.model_selection import train_test_split
 
 
-def create_model(input_shape=9, output_shape=9, hidden_layers=(9,)):
+def create_model(input_shape=(9,), output_shape=9, hidden_layers=(9,)):
     """
     Creates a model for the neural network.
     :param input_shape: shape of the input data
@@ -20,7 +20,7 @@ def create_model(input_shape=9, output_shape=9, hidden_layers=(9,)):
         model.add(Dense(units=i, activation='relu'))
 
     model.add(Dense(units=output_shape, activation='sigmoid'))
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
     return model
 
 
