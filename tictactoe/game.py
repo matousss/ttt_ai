@@ -12,6 +12,10 @@ class TicTacToe:
     def __init__(self, player1, player2, *, choose_next_player=_default_chooser):
         self._stones = get_default_desk()
         self.players = (player1, player2)
+        self._last_played = None
+        self._max_games = max_games
+        self._game_num = 0
+        self._draws = 0
 
         # init players
         for p in self.players:
@@ -35,6 +39,11 @@ class TicTacToe:
 
     def _game_over(self, game_state):
         print(f'Game ended: {"draw" if game_state == GameState.DRAW else f"{STONE_STR[game_state]} wins"}')
+        self._game_num += 1
+        if game_state == GameState.DRAW:
+            self._draws += 1
+        if self._game_num == self._max_games:
+            return
         self._notify_end(game_state)
         self._player_on_roll = self.choose_next_player(self)
         self._stones = get_default_desk()
@@ -57,8 +66,8 @@ class TicTacToe:
             self._game_over(game_state)
 
         else:
+            self._last_played = self._player_on_roll
             self._player_on_roll = Stone.O_PLAYER if self._player_on_roll == Stone.X_PLAYER else Stone.X_PLAYER
-            self.next_roll()
 
     """
     Returns copy of current desk state
@@ -66,8 +75,18 @@ class TicTacToe:
     def get_desk(self):
         return deepcopy(self._stones)
 
+    def start(self):
+        self.next_roll()
 
-#
+    def get_scores(self):
+        return self._game_num, self._draws, self.players[0].score, self.players[1].score
+
+    def start(self):
+        while True:
+            self.next_roll()
+            if self._game_num == self._max_games:
+                break
+
 #
 #
 #
@@ -113,10 +132,14 @@ class TicTacToeGUI(TicTacToe):
         return val
 
     def _update_symbols(self):
-        for row in range(3):
-            for col in range(3):
+        for col in range(3):
+            for row in range(3):
                 stone = self._stones[col][row]
                 self._window[f'{row}-{col}'].update(disabled=(stone != -1), **self._get_symbol(stone))
+
+    def play(self, x, y):
+        super().play(x, y)
+        self._update_symbols()
 
     def on_event(self, *args, **kwargs):
         self.get_player_on_roll().on_event(*args, **kwargs)
@@ -127,18 +150,21 @@ class TicTacToeGUI(TicTacToe):
 
     def _work(self):
         self._fix_btns()
-
         while self._running is True:
-            event, values = self._window.read()
+            if self._game_num == self._max_games:
+                self._running = False
+                break
+            event, values = self._window.read(timeout=100)
             if event == WIN_CLOSED:
                 self._running = False
                 return
             self.on_event(event, values)
-            self._update_symbols()
+            if self._last_played is not self.get_player_on_roll().color:
+                self.next_roll()
 
     def start(self):
         if self._running is True:
             raise RuntimeError('Cannot run one window twice')
 
         self._running = True
-        Thread(target=self._work, daemon=True).start()
+        self._work()
