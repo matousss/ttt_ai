@@ -77,7 +77,7 @@ def get_right_strokes(log: DeskLog, include_draws):
         desk_state = data[0]
         stroke = data[1]
 
-        if stroke.stone != log.get_winner() or (log.get_winner() != GameState.DRAW and not include_draws):
+        if stroke.stone != log.get_winner() and (include_draws is False and log.get_winner() == GameState.DRAW):
             continue
 
         transformed_desk = get_data_desk()
