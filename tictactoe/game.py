@@ -1,7 +1,4 @@
 from copy import deepcopy
-from threading import Thread
-from time import sleep
-
 from PySimpleGUI import WIN_CLOSED, Window, Button
 
 from tictactoe.players import Player
@@ -89,14 +86,13 @@ class TicTacToe:
     def get_desk(self):
         return deepcopy(self._stones)
 
-    def start(self):
-        self.next_roll()
+
 
     def get_scores(self):
         return self._game_num, self._draws, self.players[0].score, self.players[1].score
 
     def start(self):
-        while self._running:
+        while True:
             if self._game_num == self._max_games:
                 break
 

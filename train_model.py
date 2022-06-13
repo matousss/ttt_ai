@@ -16,7 +16,7 @@ def get_raw(*paths):
 
 
 if __name__ == '__main__':
-    raw = get_raw('data_random-minimax.txt')
+    raw = get_raw('./data/data_random-minimax.txt')
     data_x, data_y = numpy.array(raw[0]), numpy.array(raw[1])
 
     model = create_model(hidden_layers=[12, 14, 14, 12])

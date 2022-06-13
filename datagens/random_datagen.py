@@ -8,7 +8,7 @@ from tictactoe.util import Stone
 
 if __name__ == '__main__':
     theme('black')
-    t = Trainer(RandomPlayer, MiniMaxPlayer, max_games=2)
+    t = Trainer(RandomPlayer, MiniMaxPlayer, max_games=5000)
     t.start()
     print(t.get_logs())
     data = data_from_logs(t.get_logs())

@@ -11,10 +11,10 @@ if __name__ == '__main__':
     model = load_model('model.h5')
     # TicTacToeGUI(HumanPlayer, AIPlayerBuilder(model)).start()
     d = numpy.array([
-        [-1, -1, 0],
-        [-1, -1, -1],
-        [-1, -1, -1],
-                                   ]).reshape(-1, 9)
+        [0, -1, 0],
+        [0, 0, 0],
+        [0, 0, 0],
+    ]).reshape(-1, 9)
 
     print(d)
 
