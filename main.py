@@ -6,7 +6,7 @@ from tictactoe.game import TicTacToeGUI
 
 if __name__ == '__main__':
     theme('black')
-    t = TicTacToeGUI(HumanPlayer(0), MiniMaxPlayer(1), max_games=20)
+    t = TicTacToeGUI(HumanPlayer, MiniMaxPlayer, max_games=20)
     t.start()
 
     print(t.get_scores())

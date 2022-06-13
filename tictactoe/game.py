@@ -12,8 +12,8 @@ from tictactoe.util import STONE_STR, STONES_BASE64, Stone, GameState, get_defau
 class TicTacToe:
     def __init__(self, player_class1, player_class2, *, choose_next_player=_default_chooser, max_games=None):
         self._stones = get_default_desk()
-        player1 = player_class1(Stone.X_PLAYER)
-        player2 = player_class2(Stone.O_PLAYER)
+        player1 = player_class1(Stone.X_PLAYER, self)
+        player2 = player_class2(Stone.O_PLAYER, self)
         self.players = (player1, player2)
         self._color_to_player = {
             player1.color: player1,
@@ -23,10 +23,6 @@ class TicTacToe:
         self._max_games = max_games
         self._game_num = 0
         self._draws = 0
-
-        # init players
-        for p in self.players:
-            p.set_game(self)
 
         self.choose_next_player = choose_next_player
         self._player_on_roll = self.choose_next_player(self)
@@ -57,10 +53,11 @@ class TicTacToe:
         self._game_num += 1
         if game_state == GameState.DRAW:
             self._draws += 1
+
+        self._notify_end(game_state)
         if self._game_num == self._max_games:
             self._running = False
             return
-        self._notify_end(game_state)
         self._restart()
 
     def switch_players(self):
@@ -99,7 +96,7 @@ class TicTacToe:
         return self._game_num, self._draws, self.players[0].score, self.players[1].score
 
     def start(self):
-        while True:
+        while self._running:
             if self._game_num == self._max_games:
                 break
 

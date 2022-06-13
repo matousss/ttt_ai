@@ -5,9 +5,17 @@ from tictactoe.players import Player
 from tictactoe.util import Stone
 
 
+class AIPlayerBuilder:
+    def __init__(self, model):
+        self.model = model
+
+    def __call__(self, *args, **kwargs):
+        return AIPlayer(*args, self.model, **kwargs)
+
+
 class AIPlayer(Player):
-    def __init__(self, color, model):
-        super().__init__(color)
+    def __init__(self, *args, model, **kwargs):
+        super().__init__(*args, **kwargs)
         self.model = model
         self._transformer = {
             self.color: 1,

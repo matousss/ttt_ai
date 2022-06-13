@@ -6,13 +6,10 @@ def raise_(ex):
 
 
 class Player:
-    def __init__(self, color):
+    def __init__(self, color, game):
         self.color = color
-        self.game = None
-        self.score = 0
-
-    def set_game(self, game):
         self.game = game
+        self.score = 0
 
     def play(self, x, y):
         self.game.play(x, y)
