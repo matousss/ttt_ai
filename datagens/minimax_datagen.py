@@ -1,14 +1,14 @@
 from PySimpleGUI import theme
 
 from ai.data import data_from_logs, save_data
-from ai.trainer import TrainerGUI
+from ai.trainer import Trainer
 from minimax.player import MiniMaxPlayer
-from tictactoe.players import HumanPlayer
+from tictactoe.util import Stone
 
 if __name__ == '__main__':
     theme('black')
-    t = TrainerGUI(HumanPlayer(0), MiniMaxPlayer(1), max_games=20)
+    t = Trainer(MiniMaxPlayer(Stone.X_PLAYER), MiniMaxPlayer(Stone.O_PLAYER), max_games=20)
     t.start()
 
     data = data_from_logs(t.get_logs())
-    save_data(*data, 'data_player-minimax.txt')
+    save_data(*data, 'data_minimax-minimax.txt')
