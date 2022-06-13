@@ -10,8 +10,10 @@ from tictactoe.util import STONE_STR, STONES_BASE64, Stone, GameState, get_defau
 
 # Class represents a game of TicTacToe
 class TicTacToe:
-    def __init__(self, player1, player2, *, choose_next_player=_default_chooser, max_games=None):
+    def __init__(self, player_class1, player_class2, *, choose_next_player=_default_chooser, max_games=None):
         self._stones = get_default_desk()
+        player1 = player_class1(Stone.X_PLAYER)
+        player2 = player_class2(Stone.O_PLAYER)
         self.players = (player1, player2)
         self._color_to_player = {
             player1.color: player1,
@@ -56,6 +58,7 @@ class TicTacToe:
         if game_state == GameState.DRAW:
             self._draws += 1
         if self._game_num == self._max_games:
+            self._running = False
             return
         self._notify_end(game_state)
         self._restart()
@@ -179,6 +182,7 @@ class TicTacToeGUI(TicTacToe):
             if first:
                 first = False
                 self._update_symbols()
+
             self.on_event(event, values)
             if self._roll_ended:
                 self._player_on_roll = Stone.O_PLAYER if self._player_on_roll == Stone.X_PLAYER else Stone.X_PLAYER
