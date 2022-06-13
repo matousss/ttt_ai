@@ -63,28 +63,35 @@ class DeskLog:
         return string
 
 
+def get_data_desk():
+    return [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0],
+    ]
+
+
 def get_right_strokes(log: DeskLog, include_draws):
     right_strokes = []
-
     for data in log.get_strokes():
         desk_state = data[0]
         stroke = data[1]
 
-        if stroke.stone != log.get_winner() or (log.get_winner() == GameState.DRAW and include_draws):
+        if stroke.stone != log.get_winner() or (log.get_winner() != GameState.DRAW and not include_draws):
             continue
 
-        transformed_desk = get_default_desk()
+        transformed_desk = get_data_desk()
         for x in range(3):
             for y in range(3):
-                transformed_desk[x][y] = int(desk_state[x][y] == log.get_winner())
+                transformed_desk[x][y] = 1 if desk_state[x][y] == log.get_winner() else -1
 
-        input = numpy.array(desk_state).flatten()
-        result = get_default_desk()
+        input_arr = numpy.array(desk_state).flatten()
+        result = get_data_desk()
         result[stroke.x][stroke.y] = 1
 
-        output = numpy.array(result).flatten()
+        output_arr = numpy.array(result).flatten()
 
-        right_strokes.append((input, output))
+        right_strokes.append((input_arr, output_arr))
 
     return right_strokes
 

@@ -5,13 +5,13 @@ from os import path
 
 
 class Stone:
-    EMPTY = -1
-    X_PLAYER = 0
+    EMPTY = 0
+    X_PLAYER = -1
     O_PLAYER = 1
 
 
 class GameState:
-    PLAYING = -1
+    PLAYING = Stone.EMPTY
     X_WON = Stone.X_PLAYER
     O_WON = Stone.O_PLAYER
     DRAW = 3
@@ -70,9 +70,10 @@ def _default_chooser(game: 'TicTacToe'):
 
 
 def check_win(desk):
+    # check cols
     for i in range(3):
         a = desk[i][0]
-        if a == -1:
+        if a == Stone.EMPTY:
             continue
         for j in range(1, 3):
             if desk[i][j] != a:
@@ -80,9 +81,10 @@ def check_win(desk):
         else:
             return a
 
+    # check cols
     for i in range(3):
         a = desk[0][i]
-        if a == -1:
+        if a == Stone.EMPTY:
             continue
         for j in range(1, 3):
             if desk[j][i] != a:
@@ -93,7 +95,7 @@ def check_win(desk):
     # check diagonals
     for i in range(2):
         a = desk[i * 2][0]
-        if a == -1:
+        if a == Stone.EMPTY:
             continue
         for j in range(1, 3):
 
@@ -115,8 +117,8 @@ def check_win(desk):
 def get_possible_moves(board):
     moves = []
 
-    for x in range(len(board)):
-        for y in range(len(board[0])):
+    for x in range(3):
+        for y in range(3):
             if board[x][y] == Stone.EMPTY:
                 moves.append((x, y))
 

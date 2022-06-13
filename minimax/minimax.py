@@ -26,7 +26,7 @@ def best_move(desk, color):
 
     # dont't calculate first move, because it is always in corner
     if len(moves) == 9:
-        return randint(0, 1) * 2, randint(0, 1) * 2
+        return randint(0, 2), randint(0, 2)
 
     for move in moves:
         score = minimax(False, color, imaginary_move(*move, board, color))

@@ -36,3 +36,6 @@ class Trainer(TicTacToe):
 class TrainerGUI(Trainer, TicTacToeGUI):
     def __init__(self, *args, **kwargs):
         super(TrainerGUI, self).__init__(*args, **kwargs)
+
+    def _print_winner(self, game_state):
+        TicTacToe._print_winner(self, game_state)

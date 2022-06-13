@@ -1,5 +1,6 @@
 from copy import deepcopy
 from threading import Thread
+from time import sleep
 
 from PySimpleGUI import WIN_CLOSED, Window, Button
 
@@ -12,7 +13,11 @@ class TicTacToe:
     def __init__(self, player1, player2, *, choose_next_player=_default_chooser, max_games=None):
         self._stones = get_default_desk()
         self.players = (player1, player2)
-        self._last_played = None
+        self._color_to_player = {
+            player1.color: player1,
+            player2.color: player2,
+        }
+        self._roll_ended = True
         self._max_games = max_games
         self._game_num = 0
         self._draws = 0
@@ -25,7 +30,7 @@ class TicTacToe:
         self._player_on_roll = self.choose_next_player(self)
 
     def get_player_on_roll(self) -> Player:
-        return self.players[self._player_on_roll]
+        return self._color_to_player[self._player_on_roll]
 
     def next_roll(self):
         self.get_player_on_roll().on_roll()
@@ -40,6 +45,11 @@ class TicTacToe:
     def _print_winner(self, game_state):
         print(f'Game ended: {"draw" if game_state == GameState.DRAW else f"{STONE_STR[game_state]} wins"}')
 
+    def _restart(self):
+        self._player_on_roll = self.choose_next_player(self)
+        self._stones = get_default_desk()
+        self._roll_ended = True
+
     def _game_over(self, game_state):
         self._print_winner(game_state)
         self._game_num += 1
@@ -48,16 +58,17 @@ class TicTacToe:
         if self._game_num == self._max_games:
             return
         self._notify_end(game_state)
-        self._player_on_roll = self.choose_next_player(self)
-        self._stones = get_default_desk()
+        self._restart()
 
-        self.next_roll()
+    def switch_players(self):
+        self._player_on_roll = Stone.O_PLAYER if self._player_on_roll == Stone.X_PLAYER else Stone.X_PLAYER
 
     """
     Places a stone on the desk.
     :param x: x coordinate of the stone
     :param y: y coordinate of the stone
     """
+
     def play(self, x, y):
         if self._stones[x][y] != Stone.EMPTY:
             raise ValueError('This cell is already occupied')
@@ -65,16 +76,16 @@ class TicTacToe:
         self.set_stone(x, y, self.get_player_on_roll().color)
 
         game_state = check_win(self._stones)
-        if game_state != -1:
+        if game_state != GameState.PLAYING:
             self._game_over(game_state)
 
         else:
-            self._last_played = self._player_on_roll
-            self._player_on_roll = Stone.O_PLAYER if self._player_on_roll == Stone.X_PLAYER else Stone.X_PLAYER
+            self._roll_ended = True
 
     """
     Returns copy of current desk state
     """
+
     def get_desk(self):
         return deepcopy(self._stones)
 
@@ -86,9 +97,14 @@ class TicTacToe:
 
     def start(self):
         while True:
-            self.next_roll()
             if self._game_num == self._max_games:
                 break
+
+            if self._roll_ended:
+                self._player_on_roll = Stone.O_PLAYER if self._player_on_roll == Stone.X_PLAYER else Stone.X_PLAYER
+                self._roll_ended = False
+                self.next_roll()
+
 
 #
 #
@@ -118,6 +134,7 @@ class TicTacToeGUI(TicTacToe):
     """
     Check if game window is running
     """
+
     def is_running(self):
         return self._running
 
@@ -138,7 +155,7 @@ class TicTacToeGUI(TicTacToe):
         for col in range(3):
             for row in range(3):
                 stone = self._stones[col][row]
-                self._window[f'{row}-{col}'].update(disabled=(stone != -1), **self._get_symbol(stone))
+                self._window[f'{row}-{col}'].update(disabled=(stone != Stone.EMPTY), **self._get_symbol(stone))
 
     def play(self, x, y):
         super().play(x, y)
@@ -147,12 +164,9 @@ class TicTacToeGUI(TicTacToe):
     def on_event(self, *args, **kwargs):
         self.get_player_on_roll().on_event(*args, **kwargs)
 
-    def _fix_btns(self):
-        self._window.read(timeout=1)
-        self._update_symbols()
-
     def _work(self):
-        self._fix_btns()
+        first = True
+
         while self._running is True:
             if self._game_num == self._max_games:
                 self._running = False
@@ -161,8 +175,14 @@ class TicTacToeGUI(TicTacToe):
             if event == WIN_CLOSED:
                 self._running = False
                 return
+
+            if first:
+                first = False
+                self._update_symbols()
             self.on_event(event, values)
-            if self._last_played is not self.get_player_on_roll().color:
+            if self._roll_ended:
+                self._player_on_roll = Stone.O_PLAYER if self._player_on_roll == Stone.X_PLAYER else Stone.X_PLAYER
+                self._roll_ended = False
                 self.next_roll()
 
     def start(self):
