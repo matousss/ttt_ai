@@ -7,7 +7,7 @@ from randomized.player import RandomPlayer
 
 if __name__ == '__main__':
     theme('black')
-    t = Trainer(RandomPlayer, MiniMaxPlayer, max_games=5000)
+    t = Trainer(RandomPlayer, MiniMaxPlayer, max_games=500)
     t.start()
     print(t.get_logs())
     data = data_from_logs(t.get_logs())
