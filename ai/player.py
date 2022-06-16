@@ -1,5 +1,3 @@
-import math
-
 import numpy as numpy
 
 from ai.data import get_data_desk
