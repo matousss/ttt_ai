@@ -1,8 +1,7 @@
 from copy import deepcopy
-from PySimpleGUI import WIN_CLOSED, Window, Button, theme
 
 from tictactoe.players import Player
-from tictactoe.util import STONE_STR, STONES_BASE64, Stone, GameState, get_default_desk, _default_chooser, check_win
+from tictactoe.util import STONE_STR, Stone, GameState, get_default_desk, _default_chooser, check_win
 
 
 # Class represents a game of TicTacToe
