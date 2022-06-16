@@ -1,3 +1,5 @@
+import math
+
 import numpy as numpy
 
 from ai.data import get_data_desk
@@ -10,7 +12,7 @@ class AIPlayerBuilder:
         self.model = model
 
     def __call__(self, *args, **kwargs):
-        return AIPlayer(*args, self.model, **kwargs)
+        return AIPlayer(*args, model=self.model, **kwargs)
 
 
 class AIPlayer(Player):
@@ -30,6 +32,17 @@ class AIPlayer(Player):
             for y in range(3):
                 transformed[x][y] = self._transformer[desk_state[x][y]]
 
-        p = self.model.predict(numpy.array(transformed).flatten())
-        print(p)
-        # todo handle result
+        d = numpy.array(transformed).reshape(-1, 9)
+        best_move = 0, 0
+        best = -1
+
+        predict = self.model.predict(d).reshape(3, 3)
+        print(predict.reshape(3, 3))
+        for x in range(3):
+            for y in range(3):
+                if predict[x][y] > best and desk_state[x][y] == Stone.EMPTY:
+                    best_move = x, y
+                    best = predict[x][y]
+
+        print(best_move)
+        self.play(*best_move)
