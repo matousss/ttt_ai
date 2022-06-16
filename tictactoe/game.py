@@ -86,7 +86,12 @@ class TicTacToe:
         return deepcopy(self._stones)
 
     def get_scores(self):
-        return self._game_num, self._draws, self.players[0].score, self.players[1].score
+        return {
+            'total': self._game_num,
+            'draws': self._draws,
+            STONE_STR[self.players[0].color]: self.players[0].score,
+            STONE_STR[self.players[1].color]: self.players[1].score,
+        }
 
     def start(self):
         while True:

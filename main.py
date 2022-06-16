@@ -1,4 +1,4 @@
-from PySimpleGUI import theme, Window, Text, WIN_CLOSED, Button, Quit, Slider, Radio
+from PySimpleGUI import theme, Window, Text, WIN_CLOSED, Button, Quit, Slider, Radio, Ok
 from keras.saving.save import load_model
 
 from ai.player import AIPlayerBuilder
@@ -6,6 +6,7 @@ from minimax.player import MiniMaxPlayer
 from tictactoe.game import TicTacToe
 from tictactoe.players import HumanPlayer
 from tictactoe.game_gui import TicTacToeGUI
+from tictactoe.util import STONE_STR, Stone
 
 GAMEMODE_KEYS = ['gamemode_01', 'gamemode_02', 'gamemode_03']
 GAMEMODES = {
@@ -58,6 +59,18 @@ def retrain_popup():
         win.close()
 
 
+def show_score(scores):
+    texts = [[Text(f'{k}: {scores[k]}')] for k in scores.keys()]
+
+    score_window = Window('TicTacToe - Score', element_justification='right')
+    score_window.layout([
+        [Text('Score:   ')],
+        *texts,
+        [Ok()]],
+    )
+    score_window.read()
+    score_window.close()
+
 def main():
     while True:
         event, values = window.read()
@@ -89,8 +102,8 @@ def main():
                 players = [players[1], players[0]]
                 print(players)
             limit = int(values['games_limit']) if values['games_limit'] != 0 else None
-            start_game(True, *players, limit)
-
+            score = start_game(True, *players, limit)
+            show_score(score)
             window.reappear()
             continue
 
@@ -109,6 +122,7 @@ def start_game(gui: bool, player_1, player_2, max_games: int):
         game = TicTacToe(player_1, player_2, max_games=max_games)
 
     game.start()
+    return game.get_scores()
 
 
 if __name__ == '__main__':
