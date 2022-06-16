@@ -1,7 +1,7 @@
 from PySimpleGUI import theme, Button, Window, WIN_CLOSED
 
 from tictactoe.game import TicTacToe
-from tictactoe.util import Stone, STONES_BASE64
+from tictactoe.util import Stone, STONES_BASE64, GameState
 
 
 # Game representation with GUI
@@ -54,17 +54,29 @@ class TicTacToeGUI(TicTacToe):
     def on_event(self, *args, **kwargs):
         self.get_player_on_roll().on_event(*args, **kwargs)
 
+    def _game_over(self, game_state):
+        self._game_num += 1
+        if game_state == GameState.DRAW:
+            self._draws += 1
+
+        self._notify_end(game_state)
+
+        self._restart()
+
     def _work(self):
         first = True
 
         while self._running is True:
-            if self._game_num == self._max_games:
-                self._running = False
-                break
             event, values = self._window.read(timeout=100)
             if event == WIN_CLOSED:
                 self._running = False
                 return
+
+            if self._game_num == self._max_games:
+                self._running = False
+                self._window.close()
+                print('ahoj')
+                break
 
             if first:
                 first = False
