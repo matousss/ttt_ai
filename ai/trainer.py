@@ -1,5 +1,6 @@
 from ai.data import DeskLog, Stroke
-from tictactoe.game import TicTacToe, TicTacToeGUI
+from tictactoe.game import TicTacToe
+from tictactoe.game_gui import TicTacToeGUI
 
 
 class Trainer(TicTacToe):

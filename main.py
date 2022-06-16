@@ -2,7 +2,7 @@ from PySimpleGUI import theme
 
 from minimax.player import MiniMaxPlayer
 from tictactoe.players import HumanPlayer
-from tictactoe.game import TicTacToeGUI
+from tictactoe.game_gui import TicTacToeGUI
 
 if __name__ == '__main__':
     theme('black')
