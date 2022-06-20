@@ -6,7 +6,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.model_selection import train_test_split
 
 
-def create_model(input_shape=(9,), output_shape=9, hidden_layers=(9,)):
+def create_model(input_shape=(9,), output_shape=9, hidden_layers=(1,)):
     """
     Creates a model for the neural network.
     :param input_shape: shape of the input data
@@ -25,7 +25,7 @@ def create_model(input_shape=(9,), output_shape=9, hidden_layers=(9,)):
     return model
 
 
-def train(model, data, epochs, batch_size):
+def train(model, data, epochs, batch_size, include_metrics=False):
     input_data = data[0]
     output_data = data[1]
 
@@ -40,6 +40,10 @@ def train(model, data, epochs, batch_size):
 
     pred = model.predict(x_test)
 
-    print("MAE: {}, MSE: {}".format(mean_absolute_error(y_test, pred),
-                                    mean_squared_error(y_test, pred, squared=False)))
+    mae, mse = mean_absolute_error(y_test, pred), mean_squared_error(y_test, pred, squared=False)
+
+    print(f"MAE: {mae}, MSE: {mse}")
+
+    if include_metrics:
+        return model, mae, mse
     return model

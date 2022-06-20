@@ -107,8 +107,8 @@ def data_from_logs(logs, include_draws=False):
     return numpy.array(input_data), numpy.array(output_data)
 
 
-def save_data(input_data, output_data, filename):
-    with open(filename, 'w+') as f:
+def save_data(input_data, output_data, filename, append=False):
+    with open(filename, 'a' if append else 'w+') as f:
         for i in range(len(input_data)):
             in_str = ','.join(str(x) for x in input_data[i])
             out_str = ','.join(str(x) for x in output_data[i])
@@ -129,3 +129,14 @@ def load_data(filename):
             output_data.append([int(x) for x in out_str.split(',')])
 
     return input_data, output_data
+
+
+def get_raw_data(*paths):
+    data_x_raw, data_y_raw = [], []
+    for p in paths:
+        loaded = load_data(p)
+        for i in range(len(loaded[0])):
+            data_x_raw.append(loaded[0][i])
+            data_y_raw.append(loaded[1][i])
+
+    return data_x_raw, data_y_raw
