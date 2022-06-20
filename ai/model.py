@@ -21,7 +21,7 @@ def create_model(input_shape=(9,), output_shape=9, hidden_layers=(1,)):
         model.add(Dense(units=i, activation='relu'))
 
     model.add(Dense(units=output_shape, activation='sigmoid'))
-    model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     return model
 
 
