@@ -75,7 +75,6 @@ class TicTacToeGUI(TicTacToe):
             if self._game_num == self._max_games:
                 self._running = False
                 self._window.close()
-                print('ahoj')
                 break
 
             if first:

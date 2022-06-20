@@ -11,7 +11,7 @@ class Trainer(TicTacToe):
         self._logs = []
 
     def _print_winner(self, game_state):
-        print(self._game_num)
+        print('Game:', self._game_num)
 
     def _game_over(self, game_state):
         self._log.add_stroke(self._last_stroke)
