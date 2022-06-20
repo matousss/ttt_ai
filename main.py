@@ -6,7 +6,6 @@ from minimax.player import MiniMaxPlayer
 from tictactoe.game import TicTacToe
 from tictactoe.players import HumanPlayer
 from tictactoe.game_gui import TicTacToeGUI
-from tictactoe.util import STONE_STR, Stone
 
 GAMEMODE_KEYS = ['gamemode_01', 'gamemode_02', 'gamemode_03']
 GAMEMODES = {
@@ -70,6 +69,7 @@ def show_score(scores):
     )
     score_window.read()
     score_window.close()
+
 
 def main():
     while True:
