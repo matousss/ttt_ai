@@ -28,7 +28,7 @@ def best_move(desk, color):
         return 0, 0
 
     for move in moves:
-        score = minimax(False, color, imaginary_move(*move, board, color))
+        score = minimax(False, color, imaginary_move(*move, board, color), math.inf, -math.inf)
         if score > best_score:
             best_score = score
             best = move
@@ -36,36 +36,37 @@ def best_move(desk, color):
     return best
 
 
-def minimax(maximizer_turn: bool, maximizer_id: int, board):
+def minimax(maximizer_turn: bool, maximizer_id: int, board, alpha, beta):
     game_state = check_win(board)
     if game_state == GameState.DRAW:
         return 0
     elif game_state != GameState.PLAYING:
         return (1 if game_state == maximizer_id else -1) * 1000 * (1 + len(get_possible_moves(board)))
-    # scores = []
-    # for move in get_possible_moves(board):
-    #     scores.append(minimax(not maximizer_turn,
-    #                           maximizer_id,
-    #                           imaginary_move(*move, board, get_color(maximizer_turn, maximizer_id))))
-    #
-    # return max(scores) if maximizer_turn else min(scores)
+
     moves = get_possible_moves(board)
 
     if maximizer_turn:
         best_score = -math.inf
         for move in moves:
-            score = minimax(False, maximizer_id, imaginary_move(*move, board, get_color(maximizer_turn, maximizer_id)))
+            score = minimax(False, maximizer_id, imaginary_move(*move, board, get_color(maximizer_turn, maximizer_id)),
+                            alpha, beta)
             if score > best_score:
                 best_score = score
-            score = minimax(False, maximizer_id, imaginary_move(*move, board, get_color(maximizer_turn, maximizer_id)))
             if score > best_score:
                 best_score = score
+            alpha = max(alpha, score)
+            if beta <= alpha:
+                break
 
     else:
         best_score = math.inf
         for move in moves:
-            score = minimax(True, maximizer_id, imaginary_move(*move, board, get_color(maximizer_turn, maximizer_id)))
+            score = minimax(True, maximizer_id, imaginary_move(*move, board, get_color(maximizer_turn, maximizer_id)),
+                            alpha, beta)
             if score < best_score:
                 best_score = score
+            beta = min(beta, score)
+            if beta <= alpha:
+                break
 
     return best_score

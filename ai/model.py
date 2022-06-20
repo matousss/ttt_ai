@@ -15,9 +15,9 @@ def create_model(input_shape=(9,), output_shape=9, hidden_layers=(1,)):
     :return: model
     """
     model = KerasModel()
-    model.add(Dense(units=64, activation='relu', input_shape=input_shape))
+    model.add(Dense(units=hidden_layers[0], activation='relu', input_shape=input_shape))
 
-    for i in hidden_layers:
+    for i in hidden_layers[1:]:
         model.add(Dense(units=i, activation='relu'))
 
     model.add(Dense(units=output_shape, activation='sigmoid'))

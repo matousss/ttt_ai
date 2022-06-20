@@ -59,11 +59,11 @@ def retrain_popup():
 
 
 def show_score(scores):
-    texts = [[Text(f'{k}: {scores[k]}')] for k in scores.keys()]
+    texts = [[Text(f'{k}: {scores[k]}', font='Arial 20')] for k in scores.keys()]
 
     score_window = Window('TicTacToe - Score', element_justification='right')
     score_window.layout([
-        [Text('Score:   ')],
+        [Text('Score:   ', font='Arial 20')],
         *texts,
         [Ok()]],
     )
